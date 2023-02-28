@@ -5,7 +5,57 @@ import (
 	"io/ioutil"
 	"net/http"
 	"strings"
+	"encoding/json"
 )
+
+// GetJSON sends an HTTP GET request and unmarshals the response body into a JSON object
+func GetJSON(url string, headers map[string]string, obj interface{}) error {
+	respBody, err := Get(url, headers)
+	if err != nil {
+		return err
+	}
+	if err := json.Unmarshal(respBody, obj); err != nil {
+		return fmt.Errorf("failed to unmarshal response body: %v", err)
+	}
+	return nil
+}
+
+// PostJSON sends an HTTP POST request and unmarshals the response body into a JSON object
+func PostJSON(url string, headers map[string]string, body []byte, obj interface{}) error {
+	respBody, err := Post(url, headers, body)
+	if err != nil {
+		return err
+	}
+	if err := json.Unmarshal(respBody, obj); err != nil {
+		return fmt.Errorf("failed to unmarshal response body: %v", err)
+	}
+	return nil
+}
+
+// PutJSON sends an HTTP PUT request and unmarshals the response body into a JSON object
+func PutJSON(url string, headers map[string]string, body []byte, obj interface{}) error {
+	respBody, err := Put(url, headers, body)
+	if err != nil {
+		return err
+	}
+	if err := json.Unmarshal(respBody, obj); err != nil {
+		return fmt.Errorf("failed to unmarshal response body: %v", err)
+	}
+	return nil
+}
+
+// DeleteJSON sends an HTTP DELETE request and unmarshals the response body into a JSON object
+func DeleteJSON(url string, headers map[string]string, obj interface{}) error {
+	respBody, err := Delete(url, headers)
+	if err != nil {
+		return err
+	}
+	if err := json.Unmarshal(respBody, obj); err != nil {
+		return fmt.Errorf("failed to unmarshal response body: %v", err)
+	}
+	return nil
+}
+
 
 // Get sends an HTTP GET request with custom headers
 func Get(url string, headers map[string]string) ([]byte, error) {
