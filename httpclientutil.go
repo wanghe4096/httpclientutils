@@ -7,7 +7,6 @@ import (
 	"strings"
 	"encoding/json"
 )
-
 // GetJSON sends an HTTP GET request and unmarshals the response body into a JSON object
 func GetJSON(url string, headers map[string]string, obj interface{}) error {
 	respBody, err := Get(url, headers)
@@ -21,8 +20,13 @@ func GetJSON(url string, headers map[string]string, obj interface{}) error {
 }
 
 // PostJSON sends an HTTP POST request and unmarshals the response body into a JSON object
-func PostJSON(url string, headers map[string]string, body []byte, obj interface{}) error {
-	respBody, err := Post(url, headers, body)
+func PostJSON(url string, headers map[string]string, body interface{}, obj interface{}) error {
+	bodyBytes, err := json.Marshal(body)
+	if err != nil {
+		return fmt.Errorf("failed to marshal request body: %v", err)
+	}
+
+	respBody, err := Post(url, headers, bodyBytes)
 	if err != nil {
 		return err
 	}
@@ -33,8 +37,13 @@ func PostJSON(url string, headers map[string]string, body []byte, obj interface{
 }
 
 // PutJSON sends an HTTP PUT request and unmarshals the response body into a JSON object
-func PutJSON(url string, headers map[string]string, body []byte, obj interface{}) error {
-	respBody, err := Put(url, headers, body)
+func PutJSON(url string, headers map[string]string, body interface{}, obj interface{}) error {
+	bodyBytes, err := json.Marshal(body)
+	if err != nil {
+		return fmt.Errorf("failed to marshal request body: %v", err)
+	}
+
+	respBody, err := Put(url, headers, bodyBytes)
 	if err != nil {
 		return err
 	}
@@ -55,6 +64,7 @@ func DeleteJSON(url string, headers map[string]string, obj interface{}) error {
 	}
 	return nil
 }
+
 
 
 // Get sends an HTTP GET request with custom headers
